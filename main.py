@@ -2,12 +2,45 @@ from PIL import Image
 
 
 
-red = Image.open("blend_red.jpg")
-green = Image.open("cropped_right_left_green.jpg")
-blue = Image.open("blend_blue.jpg")
+image = Image.open("example.jpg")
+red, green, blue = image.split()
 
 
-rgb_image = Image.merge("RGB", (red, green, blue))
+
+coordinates = (100, 0, red.width, red.height)
+cropped_left_red = red.crop(coordinates)
+
+
+
+coordinates = (50, 0, red.width - 50, red.height)
+cropped_right_left_red = red.crop(coordinates)
+
+
+image_blend_red = Image.blend(cropped_left_red, cropped_right_left_red , 0.5)
+
+
+
+coordinates = (0, 0, blue.width - 100, blue.height)
+cropped_right_blue = blue.crop(coordinates)
+
+
+
+coordinates = (50, 0, blue.width - 50, blue.height)
+cropped_right_left_blue = blue.crop(coordinates)
+
+
+
+image_blend_blue = Image.blend(cropped_right_blue, cropped_right_left_blue, 0.5)
+
+
+
+coordinates = (50, 0, green.width - 50, green.height)
+cropped_green = green.crop(coordinates)
+
+
+
+
+rgb_image = Image.merge("RGB", (image_blend_red, cropped_green, image_blend_blue))
 rgb_image.save("rgb_image.jpg")
 
 
